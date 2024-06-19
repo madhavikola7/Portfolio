@@ -28,18 +28,3 @@ jobs:
         context: .
         push: true
         tags: ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGENAME}}:latest
-
-    - name: Install SSH client
-      run: sudo apt-get update && sudo apt-get install -y openssh-client
-
-    - name: Add SSH key
-      uses: webfactory/ssh-agent@v0.8.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    - name: Pull Docker Image on Remote Server
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{UBUNTU_USERNAME}}@${{SERVER_IP}} << 'EOF'
-          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-          docker pull ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_IMAGENAME}}:latest
-        EOF
